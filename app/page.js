@@ -1,95 +1,76 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Header from './components/Header';
+import Hero from './components/Hero';
+import Marquee from './components/Marquee';
+import Catalogue from './components/Catalogue';
+import Reveal from './components/Reveal';
+import { listProducts, formatPrice } from '@/lib/products';
 
-export default function Home() {
+export const dynamic = 'force-dynamic';
+
+export default async function Home() {
+  let products = [];
+  let failed = false;
+  try {
+    products = (await listProducts()).map((p) => ({
+      id: p.id, name: p.name, tagline: p.tagline, description: p.description, image_url: p.image_url,
+      accent: p.accent, status: p.status, price: formatPrice(p.price_cents),
+    }));
+  } catch (e) {
+    console.error(e);
+    failed = true;
+  }
+  const feature = products.find((p) => p.status === 'available') || products[0];
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <>
+      <Header />
+      <main>
+        <Hero
+          image={feature?.image_url || '/sneakers/volt-runner.jpg'}
+          name={feature?.name || 'Volt Runner'}
+          price={feature?.price || ''}
+          accent={feature?.accent || '#c6ff3d'}
         />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+        <Marquee />
+        {failed ? (
+          <section id="drops" className="section"><p className="empty">The catalogue is temporarily unavailable. Please refresh in a moment.</p></section>
+        ) : (
+          <Catalogue products={products} />
+        )}
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
+        <section id="craft" className="section craft">
+          <Reveal className="section-head">
+            <p className="eyebrow"><i /> Why SneakerDrop</p>
+            <h2>Made in small runs. Meant to be worn.</h2>
+          </Reveal>
+          <div className="craft-grid">
+            {[
+              ['01', 'Limited by design', 'Each model is produced once, in a small batch. When it is gone, it is gone.'],
+              ['02', 'Comfort engineered', 'Responsive cushioning, breathable uppers and soles tuned for how you actually move.'],
+              ['03', 'List-first access', 'People on the waitlist hear about a release before it goes public.'],
+            ].map(([n, t, d], i) => (
+              <Reveal key={n} delay={i * 110} className="craft-card">
+                <span className="num">{n}</span>
+                <h3>{t}</h3>
+                <p>{d}</p>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section id="waitlist" className="section cta">
+          <Reveal className="cta-card">
+            <p className="eyebrow"><i /> The waitlist</p>
+            <h2>Never miss a drop.</h2>
+            <p className="lead">Pick any pair above and join its waitlist with your email. One signup per pair, no spam.</p>
+            <a href="#drops" className="btn">Choose your pair</a>
+          </Reveal>
+        </section>
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      <footer className="footer">
+        <span>© 2026 SneakerDrop. A fictional brand built as a portfolio project.</span>
+        <a href="/admin">Admin</a>
       </footer>
-    </div>
+    </>
   );
 }
