@@ -47,7 +47,7 @@ export default async function Home() {
             {[
               ['01', 'Limited by design', 'Each model is produced once, in a small batch. When it is gone, it is gone.'],
               ['02', 'Comfort engineered', 'Responsive cushioning, breathable uppers and soles tuned for how you actually move.'],
-              ['03', 'List-first access', 'People on the waitlist hear about a release before it goes public.'],
+              ['03', 'Per-pair waitlists', 'Every pair has its own waitlist, so demand for each release is easy to see.'],
             ].map(([n, t, d], i) => (
               <Reveal key={n} delay={i * 110} className="craft-card">
                 <span className="num">{n}</span>
@@ -61,8 +61,8 @@ export default async function Home() {
         <section id="waitlist" className="section cta">
           <Reveal className="cta-card">
             <p className="eyebrow"><i /> The waitlist</p>
-            <h2>Never miss a drop.</h2>
-            <p className="lead">Pick any pair above and join its waitlist with your email. One signup per pair, no spam.</p>
+            <h2>Get on the list.</h2>
+            <p className="lead">Pick any pair above and join its waitlist with your email. One signup per email per pair.</p>
             <a href="#drops" className="btn">Choose your pair</a>
           </Reveal>
         </section>

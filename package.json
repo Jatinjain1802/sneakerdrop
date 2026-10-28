@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "db:setup": "node scripts/setup.mjs",
-    "hash": "node scripts/hash-password.mjs"
+    "hash": "node scripts/hash-password.mjs",
+    "test:e2e": "node scripts/e2e.mjs",
+    "test:security": "node scripts/security.mjs",
+    "scan:secrets": "bash scripts/scan-secrets.sh"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

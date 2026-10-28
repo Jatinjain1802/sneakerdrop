@@ -11,7 +11,7 @@ A premium sneaker showcase for a fictional brand. Visitors browse a live catalog
 
 | Home (desktop) | Home (mobile) |
 | --- | --- |
-| ![Home desktop](docs/screenshots/home-desktop.jpg) | ![Home mobile](docs/screenshots/home-mobile.jpg) |
+| ![Home desktop](docs/screenshots/home-desktop.jpg) | ![Home mobile](docs/screenshots/home-mobile.jpg) ![Mobile menu](docs/screenshots/mobile-menu.jpg) |
 
 | Catalogue | Catalogue (mobile) |
 | --- | --- |
@@ -90,12 +90,33 @@ Sign in at `/admin` with the email and password you chose.
 
 ### Tests
 
-`scripts/e2e.mjs` is an end-to-end API check that runs against a live instance and cleans up after itself. It covers anonymous access being rejected, login, product create/edit/availability/delete, public reflection of every change, email validation, duplicate prevention and the admin waitlist.
+All checks run against a live instance and clean up after themselves.
 
 ```bash
 npm run build && npm start &
-BASE=http://localhost:3000 ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='your-password' node scripts/e2e.mjs
+export BASE=http://localhost:3000 ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='your-password'
+npm run test:e2e        # functional: login, product CRUD, availability, public reflection, waitlist rules
+npm run test:security   # authorization, forged sessions, CSRF/origin, SQL injection, XSS, data exposure, headers
+THROTTLE=1 npm run test:security   # also checks login throttling (locks your IP out for 15 minutes, run last)
+npm run scan:secrets    # scans the working tree and full git history for credentials
 ```
+
+## Security
+
+| Area | What the app does | How it is checked |
+| --- | --- | --- |
+| Authorization | Middleware plus a per-route `requireAdmin` check on every admin read and write | Anonymous GET/POST/PUT/DELETE on all admin routes return 401 |
+| Sessions | Signed JWT (HS256) in an `HttpOnly`, `SameSite=Strict`, `Secure` (in production) cookie that expires after 8 hours | Wrong-secret, `alg=none` and garbage tokens are rejected |
+| CSRF | `SameSite=Strict` cookie plus an `Origin` check on every non-GET admin request | A cross-origin POST with a valid session returns 403 and creates nothing |
+| SQL injection | Parameterised queries only (`mysql2` placeholders), plus server-side validation of every field | Injection strings in login, product fields, email and `productId` are stored as data or rejected, tables stay intact |
+| XSS | React escapes output; image URLs must be `https://` or a local path; accent must be a hex colour | A stored `<img onerror>` name is not rendered as HTML |
+| Passwords | bcrypt, cost 12. Only the hash is stored (in an environment variable), never the password | `npm run hash` is the only way a password is turned into config |
+| Login throttling | 8 failed logins per IP per 15 minutes, then 429, even for the right password. Waitlist posts are limited to 10 per minute per IP | `THROTTLE=1 npm run test:security` |
+| Data exposure | Public API returns products only. Waitlist emails are only readable through the admin API | Emails and secrets never appear in public responses or HTML |
+| Secrets | `.env*` files are git-ignored, only `.env.example` is committed, the database is reachable only from server code | `npm run scan:secrets` finds nothing in the tree or history |
+| Headers | `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, no `X-Powered-By` | Checked in the security test |
+
+The throttles are per server instance and kept in memory. They slow down abuse but are not a replacement for a shared rate limiter.
 
 ## Database schema
 
@@ -154,7 +175,7 @@ scripts/                   setup + seed, password hash helper, e2e test
 
 - A single admin account configured through environment variables; no password reset or multi-user roles.
 - Rate limiting is per server instance and in memory. Behind many instances, use a shared store.
-- The waitlist stores emails but does not send any email (no confirmation or launch notification).
+- The waitlist only records emails for the admin to read. It does not send any email (no confirmation or launch notification) and has no access scheduling.
 - Product images are chosen by URL or path; there is no upload or image optimisation pipeline in the admin.
 - Prices are shown in USD only. There is no cart or checkout, by design.
 - On a free managed MySQL plan the database can pause after a period of inactivity, so the first request after a long idle period may be slow or fail until it wakes.

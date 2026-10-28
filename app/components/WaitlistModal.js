@@ -66,14 +66,14 @@ export default function WaitlistModal({ product, onClose }) {
           <div className="modal-done">
             <svg viewBox="0 0 52 52" className="tick" aria-hidden="true"><circle cx="26" cy="26" r="24" /><path d="M14 27l8 8 16-17" /></svg>
             <h3 id="wl-title">{msg}</h3>
-            <p>We will email you when it is your turn. No spam, just the drop.</p>
+            <p>Your email is saved for this pair. One signup per email per pair.</p>
             <button className="btn" onClick={onClose}>Back to the drops</button>
           </div>
         ) : (
           <form onSubmit={submit} noValidate>
             <p className="eyebrow"><i /> Waitlist</p>
             <h3 id="wl-title">{product.name}</h3>
-            <p className="modal-sub">Leave your email and you will hear first when this pair opens up.</p>
+            <p className="modal-sub">Leave your email to join the waitlist for this pair.</p>
             <label htmlFor="wl-email">Email address</label>
             <input
               id="wl-email"

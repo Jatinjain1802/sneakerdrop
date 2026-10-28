@@ -27,7 +27,7 @@ function Card({ p, onJoin, index }) {
     const el = ref.current;
     ['--rx', '--ry'].forEach((k) => el.style.removeProperty(k));
   }
-  const cta = p.status === 'available' ? 'Join the waitlist' : p.status === 'coming_soon' ? 'Get notified' : 'Notify me if restocked';
+  const cta = 'Join the waitlist';
   return (
     <Reveal delay={(index % 3) * 90}>
       <article className={`card status-${p.status}`} ref={ref} onMouseMove={move} onMouseLeave={leave} style={{ '--accent': p.accent }}>

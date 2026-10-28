@@ -1,5 +1,5 @@
 export default function Marquee() {
-  const words = ['Limited runs', 'Waitlist first', 'No restocks', 'Small batch', 'Built to move', 'Drop 04'];
+  const words = ['Limited runs', 'Waitlists open', 'No restocks', 'Small batch', 'Built to move', 'Drop 04'];
   const row = [...words, ...words];
   return (
     <div className="marquee" aria-hidden="true">

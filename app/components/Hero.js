@@ -28,7 +28,7 @@ export default function Hero({ image, name, price, accent }) {
           <span className="line"><span className="outline" style={{ '--d': '300ms' }}>Drop it.</span></span>
         </h1>
         <p className="hero-sub hero-in" style={{ '--d': '460ms' }}>
-          Small-batch sneakers, released in limited runs. Pick your pair, join the waitlist and be first through the door.
+          Small-batch sneakers, released in limited runs. Pick your pair and join its waitlist with your email.
         </p>
         <div className="hero-actions hero-in" style={{ '--d': '560ms' }}>
           <a href="#drops" className="btn">Explore the drops</a>
@@ -36,8 +36,8 @@ export default function Hero({ image, name, price, accent }) {
         </div>
         <dl className="hero-stats hero-in" style={{ '--d': '680ms' }}>
           <div><dt>05</dt><dd>pairs this drop</dd></div>
-          <div><dt>48h</dt><dd>early access for the list</dd></div>
-          <div><dt>1x</dt><dd>run, never restocked</dd></div>
+          <div><dt>0</dt><dd>restocks, ever</dd></div>
+          <div><dt>1x</dt><dd>small-batch run</dd></div>
         </dl>
       </div>
       <div className="hero-stage-wrap hero-in" style={{ '--d': '300ms' }}>
