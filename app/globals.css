@@ -57,7 +57,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero-title { font-family: var(--font-d); font-weight: 800; font-size: clamp(56px, 9.2vw, 140px); line-height: .92; letter-spacing: -0.05em; margin: 22px 0 26px; }
 .hero-title .line { display: block; overflow: hidden; padding-bottom: .06em; }
 .hero-title .line > span { display: inline-block; transform: translateY(110%); animation: rise .9s var(--ease) forwards; animation-delay: var(--d); }
-.hero-title .outline { color: transparent; -webkit-text-stroke: 2px var(--accent); }
+.hero-title .outline { color: var(--accent); }
 @keyframes rise { to { transform: translateY(0); } }
 .hero-in { opacity: 0; transform: translateY(18px); animation: fadeUp .9s var(--ease) forwards; animation-delay: var(--d, 0ms); }
 @keyframes fadeUp { to { opacity: 1; transform: none; } }
@@ -149,8 +149,8 @@ input[type='color'] { padding: 4px; height: 47px; cursor: pointer; }
 .modal-sub { color: var(--muted); margin-bottom: 4px; }
 .modal-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: rgba(10,10,11,.6); cursor: pointer; font-size: 20px; line-height: 1; z-index: 2; transition: background .2s; }
 .modal-close:hover { background: rgba(255,255,255,.12); }
-.modal-shoe { margin: -28px -28px 22px; height: 170px; overflow: hidden; border-radius: 28px 28px 0 0; position: relative; }
-.modal-shoe img { width: 100%; height: 100%; object-fit: cover; object-position: center 55%; }
+.modal-shoe { margin: -28px -28px 22px; height: 200px; overflow: hidden; border-radius: 28px 28px 0 0; position: relative; }
+.modal-shoe img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
 .modal-shoe::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 40%, var(--panel)); }
 .modal-done { text-align: center; padding: 6px 0 4px; }
 .modal-done p { color: var(--muted); margin-bottom: 20px; }
